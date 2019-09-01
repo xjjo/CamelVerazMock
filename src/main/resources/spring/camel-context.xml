@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+  <!-- You could also define a traditional camel context here -->
+  
+ 
+  	<bean id="verazHandler" class="veraz_cfx_service_mock.org.VerazResponseHandlerBean" />
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	        <route>
+	            <from uri="cxf:bean:simpleServiceEndpoint?dataFormat=MESSAGE"/>
+	            <!-- 
+	            <log message=">>> ${body}"/>
+	            <log message=">>> ${headers.SOAPAction}"/>
+	            -->
+	            <camel:choice>
+	            	<camel:when >
+	            		<camel:simple>${headers.SOAPAction} != '"urn:mensajeRequest"'</camel:simple>
+	            		<camel:setBody>
+	            			<simple>"Not soported operation"</simple>
+	            		</camel:setBody>
+	            	</camel:when>
+	            	<camel:otherwise>
+			           <!-- 
+			            <setHeader headerName="x_body">
+			                <simple>${body}</simple>
+			            </setHeader>
+			            <setHeader headerName="x_response">
+			                <groovy>this.getClass().getResource( "/response/response_with_gaps.xml" ).text</groovy>
+			            </setHeader>
+ 						-->
+			         	 <bean ref="verazHandler" method="mensajeRequest" />
+			         	 <log message=">>> ${headers.xRequest}"/>
+	            	</camel:otherwise>	            	
+	            </camel:choice>
+	            
+	            <log message=">>> ${body}"/>
+	        </route>
+	    </camelContext>
+	    <cxf:cxfEndpoint id="simpleServiceEndpoint"  address="/idvalidator" wsdlURL="classpath:wsdl/idvalidator.wsdl">
+	    	
+	    </cxf:cxfEndpoint>
+</beans>
+
+
+<!--
+ <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">     
+   <route id="simple-route">
+     <from id="route-timer" uri="timer:foo?period=2000"/>
+     <transform id="route-transform">
+       <method ref="myTransformer"/>
+     </transform>
+     <log id="route-log" message=">>> ${body}"/>
+   </route>
+  </camelContext>
+    -->
+   
+  <!-- 
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="cxf:bean:simpleServiceEndpoint?dataFormat=MESSAGE"/>
+            <log message=">>> ${body}"/>
+            <setHeader headerName="randomResponse">
+                <simple>random(1,6)</simple>
+            </setHeader>
+            <setBody>
+                <groovy>this.getClass().getResource( "/response/response${request.headers.randomResponse}.xml" ).text</groovy>
+            </setBody>
+            <log message=">>> ${body}"/>
+        </route>
+    </camelContext>
+    <cxf:cxfEndpoint id="simpleServiceEndpoint" address="/simpleService" wsdlURL="classpath:wsdl/simpleService.wsdl" />
+ 	-->
