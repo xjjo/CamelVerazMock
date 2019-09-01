@@ -1,0 +1,29 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns3:mensajeRequest xmlns="http://request.model.idvalidator.veraz.com/xsd" xmlns:ns2="http://model.idvalidator.veraz.com/xsd" xmlns:ns3="http://webservices.idvalidator.veraz.com">
+            <ns3:identificador>
+                <autorizacion>0</autorizacion>
+                <lote xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <producto>ETAPA1</producto>
+                <userLogon>
+                    <cliente/>
+                    <matriz>VN35987</matriz>
+                    <password>123451234512345ASDFGHJKL12345</password>
+                    <sector>03</sector>
+                    <sucursal>0</sucursal>
+                    <usuario>ID4LPO_XML</usuario>
+                </userLogon>
+            </ns3:identificador>
+            <ns3:consulta>
+                <integrante>
+                 	<cuestionario>11</cuestionario>
+                    <documento>12456789</documento>
+                    <nombre>KIMIP¸ GINA</nombre>
+                    <referencia>0</referencia>
+                    <sexo>F</sexo>
+                </integrante>
+                <integrantes>1</integrantes>
+            </ns3:consulta>
+        </ns3:mensajeRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
